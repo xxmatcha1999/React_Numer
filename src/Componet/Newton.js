@@ -45,6 +45,12 @@ class Newton_Raphson extends React.Component{
         });
     };
     
+    getERR= (e) => {
+        this.setState({
+            ERROR: e.target.value,
+        });
+    };
+
     getX = (e) => {
         this.setState({
             X: e.target.value,
@@ -61,6 +67,7 @@ class Newton_Raphson extends React.Component{
 
             let Equation = this.state.Equation;
             let Equation_def = derivative(Equation,"x").toString();
+            // console.log(Equation_def);
             let X = this.state.X;
             X = parseFloat(X);
             let ERROR = this.state.ERROR;

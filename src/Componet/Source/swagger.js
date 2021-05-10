@@ -25,7 +25,7 @@ const data = {
     ],
     
     "paths": {
-        "/root": {
+        "/root?key=45134Asd4864wadfad": {
             "post": {
                 "tags": [
                     "Root of Equation"
@@ -41,7 +41,7 @@ const data = {
                 }
             }
         },
-        "/root/{name}": {
+        "/root/{name}?key=45134Asd4864wadfad": {
             "post": {
                 "tags": [
                     "Root of Equation"
@@ -64,7 +64,7 @@ const data = {
                 }
             }
         },
-        "/matrix": {
+        "/matrix?key=45134Asd4864wadfad": {
             "post": {
                 "tags": [
                     "Matrix"
@@ -80,7 +80,7 @@ const data = {
                 }
             }
         },
-        "/matrix/{name}": {
+        "/matrix/{name}?key=45134Asd4864wadfad": {
             "post": {
                 "tags": [
                     "Matrix"
@@ -103,7 +103,7 @@ const data = {
                 }
             }
         },
-        "/interpolation": {
+        "/interpolation?key=45134Asd4864wadfad": {
             "post": {
                 "tags": [
                     "interpolation"
@@ -119,7 +119,7 @@ const data = {
                 }
             }
         },
-        "/interpolation/{name}": {
+        "/interpolation/{name}?key=45134Asd4864wadfad": {
             "post": {
                 "tags": [
                     "interpolation"

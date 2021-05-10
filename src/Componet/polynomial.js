@@ -125,7 +125,7 @@ class Polynomial extends React.Component{
     render(){
         return(
             <div className='allincompro'>
-                <h2>Polynomial</h2>
+                <h2>Newton interpolating</h2>
                 <div>
                     <Button className='Button_' type="primary" onClick={this.AddMatrix}>Add Point</Button>
                     <Button className='Button_' type="primary" onClick={this.DelMatrix}>Delete Point</Button>
