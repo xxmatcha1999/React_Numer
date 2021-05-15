@@ -91,7 +91,7 @@ class App extends React.Component {
             <Menu.Item key="13"><Link to='/conjugate'>Conjugate gradient</Link></Menu.Item>
           </SubMenu>
           <SubMenu key="sub3" icon={<TeamOutlined />} title="Interpolation">
-            <Menu.Item key="14"><Link to='/polynomial'>Polynomial</Link></Menu.Item>
+            <Menu.Item key="14"><Link to='/polynomial'>Newton Interpolation</Link></Menu.Item>
             <Menu.Item key="15"><Link to='/lagrang'>Lagrang interpolation</Link></Menu.Item>
             <Menu.Item key="16"><Link to='/Cubic'>Cubic-spline</Link></Menu.Item>
             <Menu.Item key="17"><Link to='/Linear'>Linear regression</Link></Menu.Item>

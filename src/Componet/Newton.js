@@ -118,7 +118,7 @@ class Newton_Raphson extends React.Component{
                     <span><Input onChange={this.getERR} className="Input_2" value={this.state.ERROR}/></span>
                 </div>
                 {this.state.result}
-                <LineChart width={600} height={300} data={this.state.Chart} className='Chart'>
+                <LineChart width={1200} height={300} data={this.state.Chart} margin={{ top: 5, right: 20, bottom: 5, left: 400 }}>
                     <Line type="monotone" dataKey="y" stroke="#8884d8" />
                     <CartesianGrid stroke="#ccc" />
                     <XAxis dataKey="data" />

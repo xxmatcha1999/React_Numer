@@ -3,6 +3,8 @@ import '../css/polynomial.css'
 import { Input } from 'antd'
 import { Button } from 'antd'
 
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, ReferenceLine } from 'recharts';
+
 
 import axios from 'axios'
 let apiUrl = "http://localhost:4040/data/interpolation/polynomial?key=45134Asd4864wadfad"
@@ -14,7 +16,8 @@ class Polynomial extends React.Component{
         Matrix: [[],[]],
         X: 0,
         Answer: '',
-        
+        Chart: '',
+        Y: ''
     }
 
     async gatdata() { // ฟังชั้นเรียก api
@@ -107,19 +110,31 @@ class Polynomial extends React.Component{
 
         let X = this.state.X;
         X = parseFloat(X)
-
+        let Chart = [];
         let i,f,Answer
-
+        let max = parseFloat(Matrix[0][0]);
+        let min = parseFloat(Matrix[0][0]);
         for(i = 0;i < rows;i++){
             Matrix[i][0] = parseFloat(Matrix[i][0]);
+            if(Matrix[i][0] > max){
+                max = Matrix[i][0];
+            }
+            if(Matrix[i][0] < min){
+                min = Matrix[i][0];
+            }
             Matrix[i][1] = parseFloat(Matrix[i][1]);
         }
 
         f = interpolatingPolynomial(Matrix);
 
+        for(i = min;i <= max+0.5;i+=0.5){
+            let y = f(i);
+            Chart.push({x: i,y: y});
+        }
+
         Answer = f(X)
 
-        this.setState({Answer: "f(x) : "+Answer.toString()})
+        this.setState({Answer: "f(x) : "+Answer.toString(),Chart: Chart,Y: Answer})
     }
 
     render(){
@@ -137,6 +152,15 @@ class Polynomial extends React.Component{
                 </div>
                 <div>{this.MakeMatrix()}</div>
                 {this.state.Answer}
+                <LineChart width={1200} height={300} data={this.state.Chart} margin={{ top: 5, right: 20, bottom: 5, left: 400 }}>
+                    {/* <Line type="monotone" dataKey="fx" stroke="#FF0000" /> */}
+                    <Line type="monotone" dataKey="y" stroke="#0000FF" />
+                    <CartesianGrid stroke="#ccc" />
+                    <XAxis dataKey="x" type="number" interval='preserveStart'/>
+                    <YAxis />
+                    <ReferenceLine x={parseFloat(this.state.X)} stroke="red" label={parseFloat(this.state.X)} />
+                    <ReferenceLine y={parseFloat(this.state.Y)} label={parseFloat(this.state.Y)} stroke="red" />
+                    </LineChart>
             </div>
         )
     }
