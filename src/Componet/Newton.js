@@ -6,6 +6,8 @@ import {derivative} from 'mathjs'
 import { Input } from 'antd';
 import { Button } from 'antd';
 
+import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
+
 import axios from 'axios'
 let apiUrl = "http://localhost:4040/data/root/Newton_Raphson?key=45134Asd4864wadfad"
 // let apiUrl = "https://my-json-server.typicode.com/pudjapu/react_wep/root"
@@ -18,6 +20,7 @@ class Newton_Raphson extends React.Component{
         X: '',
         ERROR: '',
         result: '',
+        Chart: ''
     }
 
     async gatdata() { // ฟังชั้นเรียก api
@@ -72,6 +75,7 @@ class Newton_Raphson extends React.Component{
             X = parseFloat(X);
             let ERROR = this.state.ERROR;
             ERROR = parseFloat(ERROR);
+            let chart = [];
 
             var expression_1 = Parser.parse(Equation);
             var expression_2 = Parser.parse(Equation_def);
@@ -85,10 +89,12 @@ class Newton_Raphson extends React.Component{
                 X_new = X - (expression_1.evaluate({x : X})/expression_2.evaluate({x : X}));
                 error_ = Math.abs((X_new-X)/X);
                 X = X_new;
+                let Y = expression_1.evaluate({ x: X_new })
+                chart.push({data: X_new,y: Y});
                 arr.push(<div className='result' key={i}>Iteration {i} : {X_new}</div>);
                 i++;
             }
-            this.setState({result: arr})
+            this.setState({result: arr, Chart: chart})
         } catch(e) {
             this.setState({result : "No data"})
         }
@@ -112,6 +118,12 @@ class Newton_Raphson extends React.Component{
                     <span><Input onChange={this.getERR} className="Input_2" value={this.state.ERROR}/></span>
                 </div>
                 {this.state.result}
+                <LineChart width={600} height={300} data={this.state.Chart} className='Chart'>
+                    <Line type="monotone" dataKey="y" stroke="#8884d8" />
+                    <CartesianGrid stroke="#ccc" />
+                    <XAxis dataKey="data" />
+                    <YAxis />
+                    </LineChart>
             </div>
         )
     }

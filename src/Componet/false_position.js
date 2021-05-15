@@ -2,6 +2,9 @@ import React from 'react';
 
 import { Input } from 'antd';
 import { Button } from 'antd';
+
+import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
+
 import axios from 'axios'
 import '../css/false_position.css';
 
@@ -16,6 +19,7 @@ class False_position extends React.Component{
         XR: '',
         ERROR: '',
         result: '',
+        Chart: ''
       };
 
     async gatdata() { // ฟังชั้นเรียก api
@@ -67,7 +71,7 @@ class False_position extends React.Component{
 
         try{
             const Parser = require('expr-eval').Parser; // ฟั่งชั้นแปลงสมการ
-        let i = 1;
+        let i;
         let arr = [];
         let err = 1;
         let Xnew;
@@ -80,9 +84,17 @@ class False_position extends React.Component{
         let ERROR = this.state.ERROR;
         ERROR = parseFloat(ERROR);
 
+        let Chart = [];
+
         var expression = Parser.parse(Equation);
 
         let X = ((XL*expression.evaluate({ x: XR }))-(XR*expression.evaluate({ x: XL })))/(expression.evaluate({ x: XR })-expression.evaluate({ x: XL }))
+        
+        for(i = parseFloat(this.state.XL)-0.1;i <= parseFloat(this.state.XR)+0.1;i=i+0.1){
+            let P_X = expression.evaluate({ x: i })
+
+            Chart.push({fx: P_X,y: 0,x: i.toFixed(2)})
+        }
 
         if(expression.evaluate({ x: X }) > 0){
             XR = X;
@@ -92,7 +104,7 @@ class False_position extends React.Component{
         }
 
         //(expression.evaluate({ x: X }) > 0) ? (XR = X) : (XL = X)
-
+        i = 1;
         while(err > ERROR){
             Xnew = ((XL*expression.evaluate({ x: XR }))-(XR*expression.evaluate({ x: XL })))/(expression.evaluate({ x: XR })-expression.evaluate({ x: XL }))
 
@@ -109,7 +121,7 @@ class False_position extends React.Component{
             X = Xnew;
             i++;
         }
-        this.setState({result: arr})
+        this.setState({result: arr,Chart: Chart})
         } catch(e){
             this.setState({result : "No data"})
         }
@@ -135,6 +147,13 @@ class False_position extends React.Component{
                     <span><Input onChange={this.getERR} className="Input_2" value={this.state.ERROR}/></span>
                 </div>
                 {this.state.result}
+                <LineChart width={1200} height={300} data={this.state.Chart} margin={{ top: 5, right: 20, bottom: 5, left: 400 }}>
+                    <Line type="monotone" dataKey="fx" stroke="#FF0000" />
+                    <Line type="monotone" dataKey="y" stroke="#0000FF" />
+                    <CartesianGrid stroke="#ccc" />
+                    <XAxis dataKey="x" />
+                    <YAxis />
+                    </LineChart>
             </div>
         )
     }

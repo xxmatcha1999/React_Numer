@@ -18,6 +18,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-testing-library": "^8.0.1",
+    "recharts": "^2.0.9",
     "regression": "^2.0.1",
     "swagger-editor": "^3.16.0",
     "swagger-ui-react": "^3.47.1",

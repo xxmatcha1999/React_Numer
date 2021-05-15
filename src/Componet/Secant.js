@@ -4,6 +4,8 @@ import '../css/Secant.css'
 import { Input } from 'antd';
 import { Button } from 'antd';
 
+import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
+
 import axios from 'axios'
 
 let apiUrl = "http://localhost:4040/data/root/Secant?key=45134Asd4864wadfad"
@@ -17,6 +19,7 @@ class Secant extends React.Component{
         X_2: '',
         ERROR: '',
         result: '',
+        Chart: ''
     }
 
     async gatdata() { // ฟังชั้นเรียก api
@@ -70,6 +73,7 @@ class Secant extends React.Component{
         X_2 = parseFloat(X_2);
         let ERROR = this.state.ERROR;
         ERROR = parseFloat(ERROR);
+        let Chart = [];
 
         var expression = Parser.parse(Equation);
 
@@ -87,7 +91,14 @@ class Secant extends React.Component{
             X_1 = Xnew;
             i++;
         }
-        this.setState({result: arr})
+
+        for(i = parseFloat(this.state.X_1)-0.1;i <= parseFloat(this.state.X_1)+1;i=i+0.1){
+            let P_X = expression.evaluate({ x: i })
+
+            Chart.push({fx: P_X,y: 0,x: i.toFixed(2)})
+        }
+
+        this.setState({result: arr,Chart: Chart})
         } catch(e){
             this.setState({result : "No data"})
         }
@@ -113,6 +124,13 @@ class Secant extends React.Component{
                     <span><Input onChange={this.getERR} className="Input_2" value={this.state.ERROR} /></span>
                 </div>
                 {this.state.result}
+                <LineChart width={1200} height={300} data={this.state.Chart} margin={{ top: 5, right: 20, bottom: 5, left: 400 }}>
+                    <Line type="monotone" dataKey="fx" stroke="#FF0000" />
+                    <Line type="monotone" dataKey="y" stroke="#0000FF" />
+                    <CartesianGrid stroke="#ccc" />
+                    <XAxis dataKey="x" />
+                    <YAxis />
+                    </LineChart>
             </div>
         )
     }

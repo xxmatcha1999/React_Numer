@@ -2,6 +2,8 @@ import React from 'react';
 import { Input } from 'antd';
 import { Button } from 'antd';
 
+import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
+
 import { bisection } from './Source/bisection'
 import axios from 'axios'
 import '../css/bisecton.css';
@@ -18,6 +20,7 @@ class Bisection extends React.Component{
         XR: '',
         ERROR: '',
         result: '',
+        Chart: ''
       };
 
 
@@ -66,16 +69,29 @@ class Bisection extends React.Component{
 
     show_value = (e) =>{
         try{
+            const Parser = require('expr-eval').Parser;
+            let Equation = this.state.Equation;
+
+            var expression = Parser.parse(Equation);
+
             let data = bisection(this.state.XL,this.state.XR,this.state.ERROR,this.state.Equation);
 
             let i;
             let arr = [];
 
+            let Chart = [];
+
             for(i = 0; i < data.length;i++){
                 arr.push(<div className='result' key={i}>Iteration {i+1} : {data[i][0]}</div>);
             }
 
-            this.setState({result: arr});
+            for(i = parseFloat(this.state.XL)-0.1;i <= parseFloat(this.state.XR)+0.1;i=i+0.1){
+                let P_X = expression.evaluate({ x: i })
+
+                Chart.push({fx: P_X,y: 0,x: i.toFixed(2)})
+            }
+
+            this.setState({result: arr,Chart: Chart});
         } catch(error) {
             this.setState({result : "No data"})
         }
@@ -102,6 +118,15 @@ class Bisection extends React.Component{
                         <span><Input onChange={this.getERR} className="Input_2" value={this.state.ERROR}/></span>
                     </div>
                     {this.state.result}
+                    <div className='Chart'>
+                    <LineChart width={1200} height={300} data={this.state.Chart} margin={{ top: 5, right: 20, bottom: 5, left: 400 }}>
+                    <Line type="monotone" dataKey="fx" stroke="#FF0000" />
+                    <Line type="monotone" dataKey="y" stroke="#0000FF" />
+                    <CartesianGrid stroke="#ccc" />
+                    <XAxis dataKey="x" />
+                    <YAxis />
+                    </LineChart>
+                </div>
                 </div>
             </div>
 

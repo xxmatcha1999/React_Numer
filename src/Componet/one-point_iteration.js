@@ -3,6 +3,8 @@ import React from 'react'
 import { Input } from 'antd';
 import { Button } from 'antd';
 
+import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
+
 import '../css/one_point.css'
 import axios from 'axios'
 let apiUrl = "http://localhost:4040/data/root/One-point_iteration?key=45134Asd4864wadfad"
@@ -14,6 +16,7 @@ class One_point extends React.Component{
         X: '',
         ERROR: '',
         result: '',
+        Chart: ''
       };
 
       async gatdata() { // ฟังชั้นเรียก api
@@ -65,6 +68,8 @@ class One_point extends React.Component{
 
         let x1,error_1;
         let err = 99999999;
+        
+        let chart = [];
 
         while(err > ERROR){
             x1 = expression.evaluate({ x: X })
@@ -73,6 +78,8 @@ class One_point extends React.Component{
             if(err === error_1){
                 break;
             }
+            let Y = expression.evaluate({ x: x1 })
+            chart.push({data: x1,y: Y});
             arr.push(<div className='result' key={i}>Iteration {i} : {x1}</div>);
             i++;
 
@@ -83,7 +90,7 @@ class One_point extends React.Component{
             this.setState({result: 'Is Diverge'})
         }
         else{
-            this.setState({result: arr})
+            this.setState({result: arr,Chart: chart})
         }
         } catch(e){
             this.setState({result : "No data"})
@@ -108,6 +115,12 @@ class One_point extends React.Component{
                     <span><Input onChange={this.getERR} className="Input_2" value={this.state.ERROR}/></span>
                 </div>
                 {this.state.result}
+                <LineChart width={600} height={300} data={this.state.Chart} className='Chart'>
+                    <Line type="monotone" dataKey="y" stroke="#8884d8" />
+                    <CartesianGrid stroke="#ccc" />
+                    <XAxis dataKey="data" />
+                    <YAxis />
+                    </LineChart>
             </div>
         )
     }
