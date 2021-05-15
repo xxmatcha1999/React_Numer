@@ -119,7 +119,7 @@ class Newton_Raphson extends React.Component{
                 </div>
                 {this.state.result}
                 <LineChart width={1200} height={300} data={this.state.Chart} margin={{ top: 5, right: 20, bottom: 5, left: 400 }}>
-                    <Line type="monotone" dataKey="y" stroke="#8884d8" />
+                    <Line type="monotone" dataKey="y" stroke="#8884d8" dot={false}/>
                     <CartesianGrid stroke="#ccc" />
                     <XAxis dataKey="data" />
                     <YAxis />

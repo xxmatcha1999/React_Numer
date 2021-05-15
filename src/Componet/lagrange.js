@@ -4,6 +4,8 @@ import { Button } from 'antd'
 import {Matrix2Input} from './Source/Matrix'
 import Lagranges from './Source/lagranges'
 
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, ReferenceLine } from 'recharts';
+
 import '../css/lagrange.css'
 
 import axios from 'axios'
@@ -16,7 +18,8 @@ class Lagrange extends React.Component{
         Matrix: [[],[]],
         X: 0,
         Answer: '',
-        
+        Chart: '',
+        Y: ''
     }
 
     async gatdata() { // ฟังชั้นเรียก api
@@ -87,11 +90,18 @@ class Lagrange extends React.Component{
         let Matrix = this.state.Matrix
         let wow = new Lagranges(parseFloat(Matrix[0][0]), parseFloat(Matrix[0][1]), parseFloat(Matrix[1][0]), parseFloat(Matrix[1][1]));
         let index
+        let mid = (Matrix[0][0]+Matrix[1][0])/2;
+        let Chart = [];
         for(let i = 2;i < Matrix.length;i++){
             index = wow.addPoint(parseFloat(Matrix[i][0]), parseFloat(Matrix[i][1]));
         }
 
-        this.setState({Answer : wow.valueOf(parseFloat(this.state.X))})
+        for(let i = Matrix[0][0];i <= Matrix[Matrix.length-1][0]+mid;i+=mid){
+            let y = wow.valueOf(i);
+            Chart.push({x: i,y: y});
+        }
+
+        this.setState({Answer : wow.valueOf(parseFloat(this.state.X)),Chart: Chart,Y: wow.valueOf(parseFloat(this.state.X))})
 
     }
 
@@ -109,6 +119,14 @@ class Lagrange extends React.Component{
                 <span><Input value={this.state.X} onChange={this.GetX} className="Input_2"/></span>
                 <Matrix2Input row={this.state.rows} onChange={this.Input} value={this.state.Matrix}/>
                 <div>{this.state.Answer}</div>
+                <LineChart width={1200} height={300} data={this.state.Chart} margin={{ top: 5, right: 20, bottom: 5, left: 400 }}>
+                    <Line type="monotone" dataKey="y" stroke="#0000FF" dot={false}/>
+                    <CartesianGrid stroke="#ccc" />
+                    <XAxis dataKey="x" type="number" interval='preserveStart'/>
+                    <YAxis />
+                    <ReferenceLine x={parseFloat(this.state.X)} stroke="red" label={parseFloat(this.state.X)} />
+                    <ReferenceLine y={parseFloat(this.state.Y)} label={parseFloat(this.state.Y)} stroke="red" />
+                    </LineChart>
             </div>
         )
     }

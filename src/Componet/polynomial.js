@@ -154,7 +154,7 @@ class Polynomial extends React.Component{
                 {this.state.Answer}
                 <LineChart width={1200} height={300} data={this.state.Chart} margin={{ top: 5, right: 20, bottom: 5, left: 400 }}>
                     {/* <Line type="monotone" dataKey="fx" stroke="#FF0000" /> */}
-                    <Line type="monotone" dataKey="y" stroke="#0000FF" />
+                    <Line type="monotone" dataKey="y" stroke="#0000FF" dot={false}/>
                     <CartesianGrid stroke="#ccc" />
                     <XAxis dataKey="x" type="number" interval='preserveStart'/>
                     <YAxis />
