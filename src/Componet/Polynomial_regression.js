@@ -8,6 +8,8 @@ import {Matrix2Input} from './Source/Matrix'
 import regression from 'regression';
 import { Button } from 'antd'
 
+import { ComposedChart, Line ,XAxis , YAxis, CartesianGrid, Scatter, ReferenceLine} from 'recharts';
+
 import axios from 'axios'
 let apiUrl = "http://localhost:4040/data/interpolation/polynomial_regression?key=45134Asd4864wadfad"
 
@@ -21,7 +23,8 @@ class Polynomial extends React.Component{
         Matrix: [[],[]],
         X: 0,
         Answer: '',
-        
+        Chart: '',
+        Y: ''
     }
 
     async gatdata() { // ฟังชั้นเรียก api
@@ -95,11 +98,20 @@ class Polynomial extends React.Component{
         for(let i =0;i < Matrix.length;i++){
             data.push([parseFloat(Matrix[i][0]),parseFloat(Matrix[i][1])])
         }
+
+        let Chart = []
+        let y;
         let result = regression.polynomial(data);
         let a0 = parseFloat(result.equation[0]);
         let a1 = parseFloat(result.equation[1]);
         let a2 = parseFloat(result.equation[2]);
-        this.setState({Answer: a2+(a1*x)+(a0*math.pow(x,2))})
+
+        for(let i = 0;i < Matrix.length;i++){
+            let y = a2+(a1*parseFloat(Matrix[i][0]))+(a0*math.pow(parseFloat(Matrix[i][0]),2));
+            Chart.push({x: parseFloat(Matrix[i][0]),y: y,trueY: parseFloat(Matrix[i][1])});
+        }
+
+        this.setState({Answer: a2+(a1*x)+(a0*math.pow(x,2)),Chart: Chart,Y:a0+(a1*parseFloat(this.state.X))})
     }
 
     render(){
@@ -116,6 +128,16 @@ class Polynomial extends React.Component{
                 </div>
                 <Matrix2Input row={this.state.rows} onChange={this.Input} value={this.state.Matrix}/>
                 <div>{this.state.Answer}</div>
+                <ComposedChart width={1200} height={300} data={this.state.Chart} margin={{ top: 5, right: 20, bottom: 5, left: 400 }}>
+                    <XAxis dataKey="x" type="number" />
+                    <YAxis />
+                    <Scatter name="x" dataKey="trueY" fill="#FFB700" />
+                    <Line type="monotone" dataKey="y" stroke="#0000FF" dot={false}/>
+                    <CartesianGrid stroke="#ccc" />
+                    <ReferenceLine x={parseFloat(this.state.X)} stroke="red" label={parseFloat(this.state.X)} />
+                    <ReferenceLine y={parseFloat(this.state.Y)} label={parseFloat(this.state.Y)} stroke="red" />
+
+                    </ComposedChart>
             </div>
         )
     }

@@ -5,6 +5,9 @@ import {Matrix2Input} from './Source/Matrix'
 import '../css/cubic_spline.css'
 import { Button } from 'antd'
 
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, ReferenceLine } from 'recharts';
+
+
 import axios from 'axios'
 let apiUrl = "http://localhost:4040/data/interpolation/Cubic-spline?key=45134Asd4864wadfad"
 
@@ -16,7 +19,8 @@ class Cubic_spline extends React.Component{
         Matrix: [[],[]],
         X: 0,
         Answer: '',
-        
+        Chart: '',
+        Y: ''
     }
 
     async gatdata() { // ฟังชั้นเรียก api
@@ -87,6 +91,8 @@ class Cubic_spline extends React.Component{
         let Matrix = this.state.Matrix
         let xs = []
         let ys = [];
+        let mid = (parseFloat(Matrix[0][0])+parseFloat(Matrix[1][0]))/2;
+        let Chart = [];
         for(let i = 0;i < Matrix.length;i++){
             xs.push(parseFloat(Matrix[i][0]));
             ys.push(parseFloat(Matrix[i][1]));
@@ -94,7 +100,12 @@ class Cubic_spline extends React.Component{
 
         let spline = new Spline(xs, ys);
 
-        this.setState({Answer : spline.at(parseFloat(this.state.X))})
+        for(let i = parseFloat(Matrix[0][0]);i <= parseFloat(Matrix[Matrix.length-1][0])+mid;i+=mid){
+            let y = spline.at(parseFloat(this.state.X));
+            Chart.push({x: i,y: y});
+        }
+
+        this.setState({Answer : spline.at(parseFloat(this.state.X)),Chart: Chart,Y: spline.at(parseFloat(this.state.X))})
     }
 
     render(){
@@ -111,6 +122,14 @@ class Cubic_spline extends React.Component{
                 <span><Input onChange={this.GetX} value={this.state.X} className="Input_2"/></span>
                 <Matrix2Input row={this.state.rows} onChange={this.Input} value={this.state.Matrix}/>
                 <div>{this.state.Answer}</div>
+                <LineChart width={1200} height={300} data={this.state.Chart} margin={{ top: 5, right: 20, bottom: 5, left: 400 }}>
+                    <Line type="monotone" dataKey="y" stroke="#0000FF" dot={false}/>
+                    <CartesianGrid stroke="#ccc" />
+                    <XAxis dataKey="x" type="number" interval='preserveStart'/>
+                    <YAxis />
+                    <ReferenceLine x={parseFloat(this.state.X)} stroke="red" label={parseFloat(this.state.X)} />
+                    <ReferenceLine y={parseFloat(this.state.Y)} label={parseFloat(this.state.Y)} stroke="red" />
+                    </LineChart>
             </div>
         )
     }
