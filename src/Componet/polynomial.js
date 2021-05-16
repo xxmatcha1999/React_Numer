@@ -132,6 +132,10 @@ class Polynomial extends React.Component{
             Chart.push({x: i,y: y});
         }
 
+        for(i = 0;i < Matrix.length ;i++){
+            Chart.push({x: parseFloat(Matrix[i][0]),Ty: parseFloat(Matrix[i][1])});
+        }
+
         Answer = f(X)
 
         this.setState({Answer: "f(x) : "+Answer.toString(),Chart: Chart,Y: Answer})
@@ -155,6 +159,7 @@ class Polynomial extends React.Component{
                 <LineChart width={1200} height={300} data={this.state.Chart} margin={{ top: 5, right: 20, bottom: 5, left: 400 }}>
                     {/* <Line type="monotone" dataKey="fx" stroke="#FF0000" /> */}
                     <Line type="monotone" dataKey="y" stroke="#0000FF" dot={false}/>
+                    <Line type="monotone" dataKey="Ty" stroke="#00FF00"/>
                     <CartesianGrid stroke="#ccc" />
                     <XAxis dataKey="x" type="number" interval='preserveStart'/>
                     <YAxis />
