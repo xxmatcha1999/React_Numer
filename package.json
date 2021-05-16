@@ -12,6 +12,7 @@
     "cubic-spline": "^3.0.3",
     "expr-eval": "^2.0.2",
     "interpolating-polynomial": "^1.1.2",
+    "js-polynomial-regression": "^0.9.1",
     "mathjs": "^9.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

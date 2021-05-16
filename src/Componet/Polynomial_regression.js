@@ -9,7 +9,7 @@ import regression from 'regression';
 import { Button } from 'antd'
 
 import { ComposedChart, Line ,XAxis , YAxis, CartesianGrid, Scatter, ReferenceLine} from 'recharts';
-
+import PolynomialRegression from "js-polynomial-regression";
 import axios from 'axios'
 let apiUrl = "http://localhost:4040/data/interpolation/polynomial_regression?key=45134Asd4864wadfad"
 
@@ -96,9 +96,10 @@ class Polynomial extends React.Component{
         let data = [];
         const x = parseFloat(this.state.X);
         for(let i =0;i < Matrix.length;i++){
-            data.push([parseFloat(Matrix[i][0]),parseFloat(Matrix[i][1])])
+            data.push({x: parseFloat(Matrix[i][0]),y: parseFloat(Matrix[i][1])})
         }
-
+        const model = PolynomialRegression.read(data, 3);
+        const terms = model.getTerms();
         let Chart = []
         let y;
         let result = regression.polynomial(data);
@@ -107,11 +108,11 @@ class Polynomial extends React.Component{
         let a2 = parseFloat(result.equation[2]);
 
         for(let i = 0;i < Matrix.length;i++){
-            let y = a2+(a1*parseFloat(Matrix[i][0]))+(a0*math.pow(parseFloat(Matrix[i][0]),2));
+            y = model.predictY(terms, parseFloat(Matrix[i][0]));
             Chart.push({x: parseFloat(Matrix[i][0]),y: y,trueY: parseFloat(Matrix[i][1])});
         }
 
-        this.setState({Answer: a2+(a1*x)+(a0*math.pow(x,2)),Chart: Chart,Y:a0+(a1*parseFloat(this.state.X))})
+        this.setState({Answer: model.predictY(terms, parseFloat(this.state.X)),Chart: Chart,Y: model.predictY(terms, parseFloat(this.state.X))})
     }
 
     render(){
