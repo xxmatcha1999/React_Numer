@@ -128,8 +128,8 @@ class Gauss_seidel extends React.Component{
                 <Button className='Button_' type="primary" onClick={this.Calculate}>Calculate</Button>
                 <Button type="primary" onClick={this.getdata_} >Get example</Button>
                 <div>
-                    <span className="Text_Input_2"> ERROR : </span>
-                    <span><Input onChange={this.getERR} className="Input_2" value={this.state.ERROR} /></span>
+                    <h2 className="Text_Input_2"> ERROR : </h2>
+                    <Input className='Matrix' onChange={this.getERR} className="Input_2" value={this.state.ERROR} />
                 </div>
                 <Matrix row={this.state.rows} onChange={this.Input} value={this.state.Matrix}/>
                 <div>{this.state.X}</div>
